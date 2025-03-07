@@ -30,7 +30,8 @@
 		// Volumes
 		"-v", "/mnt/scratch/${localEnv:USER}/${localWorkspaceFolderBasename}:/workspace/${localWorkspaceFolderBasename}/.mnt/scratch",
 		"-v", "/mnt/persist/${localEnv:USER}/${localWorkspaceFolderBasename}:/workspace/${localWorkspaceFolderBasename}/.mnt/persist",
-		"-v", "${localEnv:HOME}/.netrc:/root/.netrc"
+		"-v", "${localEnv:HOME}/.netrc:/root/.netrc",
+		"-v", "/mnt/nfs-data/public/${localEnv:USER}/${localWorkspaceFolderBasename}:/workspace/${localWorkspaceFolderBasename}/.mnt/nfs-data"
 	],
 
 	"mounts": [ 
