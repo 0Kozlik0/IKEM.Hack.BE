@@ -21,6 +21,12 @@ services:
       - ikem_network
 
   ikem_celery_worker:
+    privileged: true
+    shm_size: '24gb'
+    deploy:
+      resources:
+        limits:
+          memory: 30G
     container_name: ikem_celery_worker
     build: .
     command: celery -A celery_tasks.process_task worker --loglevel=info --concurrency=1

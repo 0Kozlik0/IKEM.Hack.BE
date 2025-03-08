@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 .DS_Store
 tiff_store/
+src/model/model.pth
 
 # Distribution / packaging
 .Python
@@ -71,3 +72,4 @@ wandb
 .mnt
 
 
+src/model/best_model.pth

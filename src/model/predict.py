@@ -82,20 +82,20 @@ def preprocess_npy(npy_array):
 
 def predict_patch_npy(npy_image):
     
-    model_path = "best_model.pth"
+    model_path = "/app/model/best_model.pth"
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = preprocess_npy(model_path, device)
-    image_tensor = preprocess_image(npy_image)
-    mask = infer_image(model, image_tensor, device)
+    model = load_model(model_path, device)
+    image_tensor = preprocess_npy(npy_image)
+    mask, _ = infer_image(model, image_tensor, device)
 
     return mask
 
 def process_npy_images(npy_images):
 
-    masks = np.array([])
+    masks = []
     for npy_image in npy_images:
         mask = predict_patch_npy(npy_image)
-        masks = np.append(masks, mask)
+        masks.append(mask)
 
     return masks
