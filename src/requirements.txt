@@ -7,3 +7,9 @@ pydantic
 python-dotenv
 numpy
 python-multipart
+tifffile
+shapely
+geopandas
+opencv-python
+torchvision
+tqdm

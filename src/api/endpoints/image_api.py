@@ -82,3 +82,11 @@ async def get_image(path: str):
         raise HTTPException(status_code=404, detail="Image not found")
     
     return FileResponse(file_path)
+
+@router.get("/download/{path:path}")
+async def download_image(path: str):
+    """Download a specific image by path"""
+    file_path = os.path.join(TIFF_STORE_DIR, path)
+    
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="Image not found")
