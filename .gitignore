@@ -73,3 +73,8 @@ wandb
 
 
 src/model/best_model.pth
+notebooks/combined_contours.png
+notebooks/blue_contours.png
+notebooks/filled_filtered_blue_contours.png
+notebooks/red_contours.png
+notebooks/test/im2_SegOverlaid.png

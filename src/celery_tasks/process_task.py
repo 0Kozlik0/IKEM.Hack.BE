@@ -39,8 +39,8 @@ def predict_patch_task(details: dict):
     # Try a smaller region from a different part of the image
     y = 10000  # Try different coordinates
     x = 58000
-    width = 256  # Smaller region for testing
-    height = 256
+    width = 1200  # Smaller region for testing
+    height = 1200
     
     # Create a temporary output file
     temp_output = "/tmp/region_extract.tif"
@@ -108,7 +108,7 @@ def predict_patch_task(details: dict):
     # Convert GeoDataFrame to a serializable format
     if hasattr(geojson, 'to_json'):
         geojson = geojson.to_json()
-        
+
     return {
         "geojson": geojson,
         "statistics": []
