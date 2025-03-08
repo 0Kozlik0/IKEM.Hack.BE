@@ -1,0 +1,9 @@
+uvicorn
+fastapi
+redis
+celery
+torch
+pydantic
+python-dotenv
+numpy
+python-multipart

@@ -1,0 +1,57 @@
+services:
+  ikem_redis:
+    container_name: ikem_redis
+    image: redis
+    networks:
+      - ikem_network
+
+  ikem_backend:
+    container_name: ikem_backend
+    build: .
+    ports:
+      - 7030:8000
+    volumes:
+      - ./src:/app
+      - ./tiff_store:/tiff_store
+    depends_on:
+      - ikem_redis
+    env_file:
+      - .env
+    networks:
+      - ikem_network
+
+  ikem_celery_worker:
+    container_name: ikem_celery_worker
+    build: .
+    command: celery -A celery_tasks.process_task worker --loglevel=info --concurrency=1
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app
+      - ./tiff_store:/tiff_store
+    depends_on:
+      - ikem_redis
+      - ikem_backend
+    networks:
+      - ikem_network
+
+  ikem_db:
+    container_name: ikem_db
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - ikem_network
+
+networks:
+  ikem_network:
+    driver: bridge
+
+volumes:
+  db_data:
