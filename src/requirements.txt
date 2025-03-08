@@ -13,3 +13,5 @@ geopandas
 opencv-python
 torchvision
 tqdm
+llama_iris
+llama_index
