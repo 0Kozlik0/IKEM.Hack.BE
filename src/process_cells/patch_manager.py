@@ -77,7 +77,13 @@ def merge_patches(masks, original_size, patch_size):
             if i == 0 and j == rows-1:
                 new_line = masks[i + shift]
                 x_min_line = int(patch_size - (original_size[0] - j * patch_size))
-                new_line = new_line[x_min_line:patch_size, 0:patch_size]
+                print("x_min_line: ", x_min_line)
+                print("patch_size: ", patch_size)
+                print("new_line ", new_line)
+                if isinstance(new_line, tuple):
+                    new_line = new_line[0][x_min_line:patch_size, 0:patch_size]
+                else:
+                    new_line = new_line[x_min_line:patch_size, 0:patch_size]
                 continue
             # First patch of row
             if i == 0:

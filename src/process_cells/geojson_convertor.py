@@ -35,6 +35,9 @@ def from_npy_to_geojson(npy_mask):
 
     for contour in tqdm(contours):
 
+        if len(contour) < 3:
+            continue
+
         # Get class of cell
         cell_class = mask[contour[0][0][1], contour[0][0][0]]
 
