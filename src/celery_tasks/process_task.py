@@ -4,7 +4,7 @@ from config import get_settings
 from deepliif_model.contours_processor import create_mask, extract_contours, merge_pred_masks
 from deepliif_model.deepliif_model import predict_deepliif
 from model.predict import process_npy_images
-from process_cells.geojson_convertor import from_npy_to_geojson
+from process_cells.geojson_convertor import from_npy_to_geojson, scale_geojson
 from process_cells.patch_manager import cut_image_to_patches, merge_patches
 from tifffile import TiffFile, imread
 import os
@@ -122,23 +122,29 @@ celery_app.conf.task_time_limit = 3600 * 2  # 2 hour hard time limit
 def predict_patch_task(details: dict):
 
     print(details)
-
+    details = details["rect"]
     # Save Image
     # image_path = details["image_name"]
-    image_path = "test.ome.tif"
+    image_path = "cropped.png"
 
     # Load TIFF file from tiff_store folder
     print("Loading TIFF file ...")
     tiff_store_path = os.path.join('../tiff_store', image_path)
     
     # Try a smaller region from a different part of the image
-    y = 10000  # Try different coordinates
-    x = 58000
-    width = 1200  # Smaller region for testing
-    height = 1200
+    # y = 8000  # Try different coordinates
+    # x = 10000
+    # width = 1200  # Smaller region for testing
+    # height = 1200
     
+    y = int(details["y"])  # Try different coordinates
+    x = int(details["x"])
+    width = int(details["width"])  # Smaller region for testing
+    height = int(details["height"])
+    
+
     # Create a temporary output file
-    temp_output = "/tmp/region_extract.tif"
+    temp_output = "/tmp/region_extract.png"
     
     # Use gdal_translate to extract just the region (requires GDAL to be installed)
     cmd = [
@@ -169,7 +175,7 @@ def predict_patch_task(details: dict):
 
     # Predict patches
     print("Predicting patches ...")
-    seg_path, scoring = predict_deepliif("/tmp", "region_extract.tif")
+    seg_path, scoring = predict_deepliif("/tmp", "region_extract.png")
     print("Patches predicted")
 
     print("seg_path: ", seg_path)
@@ -184,13 +190,16 @@ def predict_patch_task(details: dict):
     # Create Geojson
     print("Creating Geojson ...")
     geojson = from_npy_to_geojson(merged_pred_masks)
+    geojson = scale_geojson(geojson, (x, y))
     print("Geojson created")
 
     # Create threshold postprocessing
     # geojson = threshold_postprocessing(geojson)
 
     # Create Statistics
-    statistics = create_statistics(scoring=scoring)
+    statistics = create_statistics(scoring=scoring, 
+                                   num_positive_contours=num_positive_contours, 
+                                   num_negative_contours=num_negative_contours)
 
     # Convert GeoDataFrame to a serializable format
     if hasattr(geojson, 'to_json'):

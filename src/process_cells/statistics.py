@@ -1,6 +1,6 @@
-def create_statistics(scoring):
+def create_statistics(scoring, num_positive_contours, num_negative_contours):
 
-    ratio = round(scoring["percent_pos"] / scoring["num_total"] * 100, 2)
+    ratio = round(num_positive_contours / num_negative_contours * 100, 2)
     print("ratio: ", ratio)
 
     # Calculate grading
@@ -14,9 +14,9 @@ def create_statistics(scoring):
         grading = "Non representative area"
 
     return {
-        "positive_cells": scoring["num_pos"],
-        "negative_cells": scoring["num_neg"],
-        "total_cells": scoring["num_total"],
-        "percentage": scoring["percent_pos"],
+        "positive_cells": num_positive_contours,
+        "negative_cells": num_negative_contours,
+        "total_cells": num_positive_contours + num_negative_contours,
+        "percentage": ratio,
         "grading": grading
     }

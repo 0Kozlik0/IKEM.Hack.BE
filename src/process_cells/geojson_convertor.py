@@ -1,9 +1,9 @@
 import numpy as np
 import cv2
 from tqdm import tqdm
-
-from shapely.geometry import shape
+from shapely.geometry import shape, Polygon
 import geopandas as gpd
+
 
 def get_name_and_color(id):
     """
@@ -61,5 +61,24 @@ def from_npy_to_geojson(npy_mask):
     gdf_classes = gpd.GeoDataFrame.from_features(geojson_cells_classes)
     # gdf_classes.to_file(f'{output_path}', driver='GeoJSON')
     return gdf_classes
+
+def scale_geojson(geojson, roi):
+    """
+        Scale GeoJSON to whole slide
+
+        :param geojson: GeoJSON
+        :param roi: GeoJSON
+        :return: Scaled GeoJSON
+    """
+    offset_x = roi[0]
+    offset_y = roi[1]
+
+    for index, row in geojson.iterrows():
+        polygon = row['geometry']
+        coordinates = list(polygon.exterior.coords)
+        updated_coordinates = [(x + offset_x, y + offset_y) for x, y in coordinates]
+        geojson.at[index, 'geometry'] = Polygon(updated_coordinates)
+
+    return geojson
 
 
