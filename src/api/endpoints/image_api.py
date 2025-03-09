@@ -90,3 +90,9 @@ async def download_image(path: str):
     
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="Image not found")
+    
+    return FileResponse(
+        file_path,
+        media_type='application/octet-stream',
+        filename=os.path.basename(path)
+    )

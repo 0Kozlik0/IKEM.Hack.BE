@@ -36,3 +36,9 @@ return {
         }
     ]
 }
+
+
+
+- Create geojson - done
+- Create statistics - grading needed
+- Create threshold postprocessing - TODO
